@@ -3,6 +3,9 @@ from llama_index.core.llms import ChatMessage, MessageRole
 from llama_index.core.chat_engine.types import ChatMode
 import torch, gc
 
+from doc_utils import load_local_docs
+from model_utils import set_chat_model, set_embedding_model, set_chat_memory
+
 
 def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
     index = VectorStoreIndex.from_documents(docs, embed_model=embed_model)
@@ -36,7 +39,15 @@ def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
     )
     return chat_engine
 
-def stream_response(message):
+def create_chat_engine():
+    embed_model = set_embedding_model()
+    llm = set_chat_model()
+    docs= load_local_docs()
+    memory=set_chat_memory()
+    custom_prompt=None
+    return setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt)
+
+def stream_response(chat_engine, message):
     response = chat_engine.stream_chat(message)
     full_response = ''
     for token in response.response.gen:
