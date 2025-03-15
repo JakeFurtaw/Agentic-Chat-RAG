@@ -16,9 +16,9 @@ with gr.Blocks(title="Chat RAG 2.0", fill_width=True, css=css) as demo:
             chatbot = gr.Chatbot(label="ChatRAG 2.0", height='80vh',
                                  autoscroll=True,
                                  type='messages')
-            msg= gr.Textbox(placeholder="Enter your query here and hit enter when you're done...",
-                            interactive=True,
-                            container=True)
+            msg = gr.Textbox(placeholder="Enter your query here and hit enter when you're done...",
+                             interactive=True,
+                             container=True)
             with gr.Row():
                 clear = gr.ClearButton([msg, chatbot],
                                        value="Clear Chat Window",
@@ -41,14 +41,15 @@ with gr.Blocks(title="Chat RAG 2.0", fill_width=True, css=css) as demo:
                                          interactive=True,
                                          size="sm",
                                          elem_id="button")
+                upload_status = gr.Textbox(label="Upload Status", interactive=False)
 
             with gr.Tab("Chat With a GitHub Repository"):
                 repoOwnerUsername = gr.Textbox(label="GitHub Repository Owners Username:",
                                                placeholder="Enter GitHub Repository Owners Username Here....",
-                                               interactive= True)
+                                               interactive=True)
                 repoName = gr.Textbox(label="GitHub Repository Name:",
                                       placeholder="Enter Repository Name Here....",
-                                      interactive= True)
+                                      interactive=True)
                 repoBranch = gr.Textbox(label="GitHub Repository Branch Name:",
                                         placeholder="Enter Branch Name Here....",
                                         interactive=True)
@@ -61,6 +62,21 @@ with gr.Blocks(title="Chat RAG 2.0", fill_width=True, css=css) as demo:
                                            size="sm",
                                            interactive=True,
                                            elem_id="button")
+                github_status = gr.Textbox(label="GitHub Status", interactive=False)
 
-        msg.submit()
+    # Set up event handlers
+    msg.submit(process_message, [msg, chatbot], [chatbot])
+    clear_chat_mem.click(clear_all_memory, [], [chatbot, msg])
+
+    # File upload handlers
+    upload.click(upload_files, [files], [upload_status])
+    clear_db.click(clear_knowledge_base, [], [upload_status])
+
+    # GitHub repository handlers
+    getRepo.click(load_github_repository,
+                  [repoOwnerUsername, repoName, repoBranch],
+                  [github_status])
+    removeRepo.click(reset_github_info,
+                     [],
+                     [repoOwnerUsername, repoName, repoBranch, github_status])
     demo.launch(inbrowser=True)

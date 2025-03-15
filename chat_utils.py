@@ -50,7 +50,7 @@ def create_chat_engine():
 def stream_response(chat_engine, message):
     response = chat_engine.stream_chat(message)
     full_response = ''
-    for token in response.response.gen:
+    for token in response.response_gen:
         full_response+=token
         yield "", full_response
 
