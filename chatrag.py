@@ -61,4 +61,5 @@ with gr.Blocks(title="Chat RAG 2.0", fill_width=True, css=css) as demo:
                                            interactive=True,
                                            elem_id="button")
 
+        msg.submit()
     demo.launch(inbrowser=True)
