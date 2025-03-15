@@ -14,7 +14,8 @@ with gr.Blocks(title="Chat RAG 2.0", fill_width=True, css=css) as demo:
     with gr.Row():
         with gr.Column(scale=7, variant="compact"):
             chatbot = gr.Chatbot(label="ChatRAG 2.0", height='80vh',
-                                 autoscroll=True)
+                                 autoscroll=True,
+                                 type='messages')
             msg= gr.Textbox(placeholder="Enter your query here and hit enter when you're done...",
                             interactive=True,
                             container=True)
