@@ -45,7 +45,7 @@ def create_chat_engine():
     return setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt)
 
 def stream_response(chat_engine, message):
-    response = chat_engine.stream_chat(message)
+    response = chat_engine.stream_chat(message=message, chat_history=message)
     full_response = ''
     for token in response.response_gen:
         full_response+=token
