@@ -6,6 +6,11 @@ from model_utils import set_chat_model, set_embedding_model, set_chat_memory
 
 
 def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
+    if len(docs)> 0:
+        chat_mode = ChatMode.CONTEXT
+    else:
+        chat_mode = ChatMode.SIMPLE
+
     index = VectorStoreIndex.from_documents(docs, embed_model=embed_model)
     chat_prompt = (
         "You are an AI coding assistant, your primary function is to help users with coding-related questions \n"
@@ -21,7 +26,7 @@ def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
     system_message = ChatMessage(role=MessageRole.SYSTEM,
                                  content=chat_prompt if custom_prompt is None else custom_prompt)
     chat_engine = index.as_chat_engine(
-        chat_mode=ChatMode.CONTEXT,
+        chat_mode=chat_mode,
         memory=memory,
         stream=True,
         system_prompt=system_message,
@@ -59,4 +64,3 @@ def stream_response(message, history):
             {"role": "assistant", "content": full_response}
         ]
         yield chat_history
-
