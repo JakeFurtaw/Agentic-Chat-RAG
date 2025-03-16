@@ -4,8 +4,11 @@ from llama_index.core.chat_engine.types import ChatMode
 from doc_utils import load_local_docs
 from model_utils import set_chat_model, set_embedding_model, set_chat_memory
 
+
 def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
+    print(f"Number of docs loaded: {len(docs)}")
     index = VectorStoreIndex.from_documents(docs, embed_model=embed_model)
+    print("Index created successfully")
     chat_prompt = (
         "You are an AI coding assistant, your primary function is to help users with coding-related questions \n"
         "and tasks. You have access to a knowledge base of programming documentation and best practices. \n"
@@ -17,7 +20,8 @@ def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
         "approaches, outline the pros and cons of each. Always Remember to be friendly! \n"
         "Response:"
     )
-    system_message = ChatMessage(role=MessageRole.SYSTEM, content=chat_prompt if custom_prompt is None else custom_prompt)
+    system_message = ChatMessage(role=MessageRole.SYSTEM,
+                                 content=chat_prompt if custom_prompt is None else custom_prompt)
     chat_engine = index.as_chat_engine(
         chat_mode=ChatMode.CONTEXT,
         memory=memory,
@@ -34,21 +38,29 @@ def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
                         "Query: {query_str} \n"
                         "Answer: ")
     )
+    print("Chat Engine created successfully!")
     return chat_engine
+
 
 def create_chat_engine():
     embed_model = set_embedding_model()
     llm = set_chat_model()
-    docs= load_local_docs()
-    memory=set_chat_memory()
-    custom_prompt=None
+    docs = load_local_docs()
+    memory = set_chat_memory()
+    custom_prompt = None
     return setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt)
 
-def stream_response(chat_engine, message):
-    response = chat_engine.stream_chat(message=message, chat_history=message)
+
+def stream_response(message, history):
+    chat_engine = create_chat_engine()
+    response = chat_engine.stream_chat(message=message, chat_history=history)
     full_response = ''
     for token in response.response_gen:
-        full_response+=token
-        yield "", full_response
-
+        full_response += token
+        chat_history = history + [
+            {"role": "user", "content": message},
+            {"role": "assistant", "content": full_response}
+        ]
+        print(full_response)
+        yield chat_history
 
