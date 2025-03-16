@@ -1,4 +1,4 @@
-# Chat RAG 2.0: Updated Coding Assistant
+# Chat RAG 2.0: Interactive Coding Assistant
 This new and improved version of Chat RAG works with the latest LLMs, the newest PyTorch, 
 and the newest version of Gradio. This allows the program to work with the new Nvidia Blackwell GPUs 
 coming out soon.
