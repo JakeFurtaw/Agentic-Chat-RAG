@@ -66,7 +66,7 @@ with gr.Blocks(title="Chat RAG 2.0", fill_width=True, css=css) as demo:
                 github_status = gr.Textbox(label="GitHub Status", interactive=False)
 
     # Set up event handlers
-    msg.submit(stream_response, [msg, chatbot], [chatbot])
+    msg.submit(stream_response, [msg, chatbot], [msg, chatbot])
     # clear_chat_mem.click(clear_all_memory, [], [chatbot, msg])
     #
     # # File upload handlers

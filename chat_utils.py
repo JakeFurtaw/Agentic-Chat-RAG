@@ -63,4 +63,4 @@ def stream_response(message, history):
             {"role": "user", "content": message},
             {"role": "assistant", "content": full_response}
         ]
-        yield chat_history
+        yield "", chat_history
