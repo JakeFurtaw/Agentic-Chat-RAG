@@ -1,11 +1,8 @@
 from llama_index.core import VectorStoreIndex
 from llama_index.core.llms import ChatMessage, MessageRole
 from llama_index.core.chat_engine.types import ChatMode
-import torch, gc
-
 from doc_utils import load_local_docs
 from model_utils import set_chat_model, set_embedding_model, set_chat_memory
-
 
 def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
     index = VectorStoreIndex.from_documents(docs, embed_model=embed_model)
