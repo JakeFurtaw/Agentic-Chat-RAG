@@ -1,6 +1,6 @@
 import gradio as gr
 from chat_utils import stream_response
-from doc_utils import load_local_docs, clear_local_docs
+from doc_utils import clear_local_docs
 
 css = """
 .gradio-container{
