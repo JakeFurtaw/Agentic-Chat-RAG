@@ -1,5 +1,6 @@
 import gradio as gr
 from chat_utils import stream_response
+from doc_utils import load_local_docs, clear_local_docs
 
 css = """
 .gradio-container{
@@ -70,8 +71,8 @@ with gr.Blocks(title="Chat RAG 2.0", fill_width=True, css=css) as demo:
     # clear_chat_mem.click(clear_all_memory, [], [chatbot, msg])
     #
     # # File upload handlers
-    # upload.click(upload_files, [files], [upload_status])
-    # clear_db.click(clear_knowledge_base, [], [upload_status])
+    # upload.click(load_local_docs(), [files], [upload_status])
+    clear_db.click(clear_local_docs())
     #
     # # GitHub repository handlers
     # getRepo.click(load_github_repository,

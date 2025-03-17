@@ -1,7 +1,7 @@
 from llama_parse import LlamaParse
 from llama_index.core import SimpleDirectoryReader
 from llama_index.readers.github import GithubClient, GithubRepositoryReader
-import glob, os, dotenv, torch
+import glob, os, dotenv, shutil, torch
 
 dotenv.load_dotenv()
 
@@ -23,6 +23,11 @@ def load_local_docs():
         else:
             documents.extend(SimpleDirectoryReader(input_files=[file]).load_data())
     return documents
+
+def clear_local_docs():
+    if os.path.exists(DIRECTORY_PATH):
+        shutil.rmtree(DIRECTORY_PATH)
+    os.makedirs(DIRECTORY_PATH, exist_ok=True)
 
 # GitHub Repo Reader setup function. Sets all initial parameters and handles data load of the repository
 # def load_github_repo(owner, repo, branch):

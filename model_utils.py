@@ -13,8 +13,8 @@ def set_chat_model():
         model='mistral-nemo:latest',
         temperature=.7,
         context_window=120000,
-        request_timeout=60,)
-        # keep_alive='30s')
+        request_timeout=60,
+        keep_alive='30s')
     return llm
 
 def set_embedding_model():
