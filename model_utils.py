@@ -14,7 +14,7 @@ def set_chat_model():
         temperature=.7,
         context_window=120000,
         request_timeout=60,
-        keep_alive='30s')
+        keep_alive='30s')# Keeps model alive for 30 seconds after last query
     return llm
 
 def set_embedding_model():
