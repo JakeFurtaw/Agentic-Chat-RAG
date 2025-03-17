@@ -9,8 +9,8 @@ coming out soon.
 2. Install the required dependencies.
 3. Set up your .env file with the following:
 ````
-GRADIO_TEMP_DIR="YourPathTo/Chat-RAG/data"
-GRADIO_WATCH_DIRS="YourPathTo/Chat-RAG"
+GRADIO_TEMP_DIR="YourPathTo/ChatRAG2.0/data"
+GRADIO_WATCH_DIRS="YourPathTo/ChatRAG2.0"
 HUGGINGFACE_HUB_TOKEN="YOUR HF TOKEN HERE"
 NVIDIA_API_KEY="YOUR NVIDIA API KEY HERE"
 OPENAI_API_KEY="YOUR OpenAI API KEY HERE"
