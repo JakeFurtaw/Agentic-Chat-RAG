@@ -1,6 +1,6 @@
 import gradio as gr
 from chat_utils import stream_response
-from doc_utils import clear_local_docs
+from doc_utils import clear_local_docs, load_github_repo
 
 css = """
 .gradio-container{
@@ -11,11 +11,11 @@ background:#06354d
 }
 """
 
-with gr.Blocks(title="Chat RAG 2.0", fill_width=True, css=css) as demo:
-    gr.Markdown("# Chat RAG 2.0: Interactive Coding Assistant")
+with gr.Blocks(title="Agentic Chat RAG", fill_width=True, css=css) as demo:
+    gr.Markdown("# Agentic Chat RAG: Interactive Coding Assistant")
     with gr.Row():
         with gr.Column(scale=7, variant="compact"):
-            chatbot = gr.Chatbot(label="ChatRAG 2.0", height='80vh',
+            chatbot = gr.Chatbot(label="Agentic Chat RAG", height='80vh',
                                  autoscroll=True,
                                  type='messages')
             msg = gr.Textbox(placeholder="Enter your query here and hit enter when you're done...",
@@ -74,9 +74,8 @@ with gr.Blocks(title="Chat RAG 2.0", fill_width=True, css=css) as demo:
     clear_db.click(clear_local_docs())
     #
     # # GitHub repository handlers
-    # getRepo.click(load_github_repository,
-    #               [repoOwnerUsername, repoName, repoBranch],
-    #               [github_status])
+    getRepo.click(load_github_repo,
+                  [repoOwnerUsername, repoName, repoBranch])
     # removeRepo.click(reset_github_info,
     #                  [],
     #                  [repoOwnerUsername, repoName, repoBranch, github_status])

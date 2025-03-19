@@ -1,7 +1,7 @@
 from llama_parse import LlamaParse
 from llama_index.core import SimpleDirectoryReader
 from llama_index.readers.github import GithubClient, GithubRepositoryReader
-import glob, os, dotenv, shutil, torch
+import glob, os, dotenv, shutil
 
 dotenv.load_dotenv()
 

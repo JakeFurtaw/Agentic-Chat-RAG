@@ -48,7 +48,7 @@ def create_chat_engine():
     embed_model = set_embedding_model()
     llm = set_chat_model()
     docs = load_local_docs()
-    # docs = load_github_repo()  #TODO need to add an if statement to this
+    # docs += load_github_repo()  #TODO need to add an if statement to this
     memory = set_chat_memory()
     custom_prompt = None
     return setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt)
