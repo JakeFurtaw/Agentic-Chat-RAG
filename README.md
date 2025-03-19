@@ -1,8 +1,8 @@
 ### This app is in production and doesn't have the same features as version one yet! Give me some time
-# Chat RAG 2.0: Interactive Coding Assistant
-This new and improved version of Chat RAG works with the latest LLMs, the newest PyTorch, 
-and the newest version of Gradio. This allows the program to work with the new Nvidia Blackwell GPUs 
-coming out soon.
+# Agentic Chat RAG : Interactive Coding Assistant
+This new and improved version of Chat RAG which includes agents to help formulate the best responses to your
+coding questions. This version works with the latest LLMs, the newest PyTorch, and the newest version of 
+Gradio. This allows the program to work with the new Nvidia Blackwell GPUs coming out soon.
 
 ## Setup and Usage
 1. Clone the repository.

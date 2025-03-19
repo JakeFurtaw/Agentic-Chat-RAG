@@ -54,6 +54,7 @@ def create_chat_engine():
 
 def process_input(message):
     chat_engine = create_chat_engine()
+
     return chat_engine.stream_chat(message=message)
 
 def stream_response(message, history):
