@@ -52,10 +52,12 @@ def create_chat_engine():
     custom_prompt = None
     return setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt)
 
+def process_input(message):
+    chat_engine = create_chat_engine()
+    return chat_engine.stream_chat(message=message)
 
 def stream_response(message, history):
-    chat_engine = create_chat_engine()
-    response = chat_engine.stream_chat(message=message)
+    response = process_input(message)
     full_response = ''
     for token in response.response_gen:
         full_response += token
