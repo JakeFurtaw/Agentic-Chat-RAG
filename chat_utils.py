@@ -1,7 +1,7 @@
 from llama_index.core import VectorStoreIndex
 from llama_index.core.llms import ChatMessage, MessageRole
 from llama_index.core.chat_engine.types import ChatMode
-from doc_utils import load_local_docs
+from doc_utils import load_local_docs, load_github_repo
 from model_utils import set_chat_model, set_embedding_model, set_chat_memory
 
 
@@ -48,6 +48,7 @@ def create_chat_engine():
     embed_model = set_embedding_model()
     llm = set_chat_model()
     docs = load_local_docs()
+    # docs = load_github_repo()  #TODO need to add an if statement to this
     memory = set_chat_memory()
     custom_prompt = None
     return setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt)

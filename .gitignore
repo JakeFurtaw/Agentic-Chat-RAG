@@ -1,6 +1,4 @@
 /data
-/Databases
-neo4j_info.txt
 /.idea
 /__pycache__
 .env

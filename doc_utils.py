@@ -29,23 +29,23 @@ def clear_local_docs():
         shutil.rmtree(DIRECTORY_PATH)
         os.makedirs(DIRECTORY_PATH)
 
-# GitHub Repo Reader setup function. Sets all initial parameters and handles data load of the repository
-# def load_github_repo(owner, repo, branch):
-#     if "GITHUB_PAT" in os.environ:
-#         github_client = GithubClient(github_token=os.getenv("GITHUB_PAT"), verbose=True)
-#         owner=owner
-#         repo=repo
-#         branch=branch
-#         documents= GithubRepositoryReader(
-#             github_client=github_client,
-#             owner=owner,
-#             repo=repo,
-#             use_parser=False,
-#             verbose=False,
-#             filter_file_extensions=([".png", ".jpg", ".jpeg", ".gif", ".svg"],
-#                                     GithubRepositoryReader.FilterType.EXCLUDE)
-#         ).load_data(branch=branch)
-#         return documents
-#     else:
-#         print("Couldn't find your GitHub Personal Access Token in the environment file. Make sure you enter your "
-#               "GitHub Personal Access Token in the .env file.")
+#GitHub Repo Reader setup function. Sets all initial parameters and handles data load of the repository
+def load_github_repo(owner, repo, branch):
+    if "GITHUB_PAT" in os.environ:
+        github_client = GithubClient(github_token=os.getenv("GITHUB_PAT"), verbose=True)
+        owner=owner
+        repo=repo
+        branch=branch
+        documents= GithubRepositoryReader(
+            github_client=github_client,
+            owner=owner,
+            repo=repo,
+            use_parser=False,
+            verbose=False,
+            filter_file_extensions=([".png", ".jpg", ".jpeg", ".gif", ".svg"],
+                                    GithubRepositoryReader.FilterType.EXCLUDE)
+        ).load_data(branch=branch)
+        return documents
+    else:
+        print("Couldn't find your GitHub Personal Access Token in the environment file. Make sure you enter your "
+              "GitHub Personal Access Token in the .env file.")
