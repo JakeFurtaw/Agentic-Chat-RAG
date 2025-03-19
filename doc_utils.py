@@ -27,7 +27,7 @@ def load_local_docs():
 def clear_local_docs():
     if os.path.exists(DIRECTORY_PATH):
         shutil.rmtree(DIRECTORY_PATH)
-    os.makedirs(DIRECTORY_PATH, exist_ok=True)
+        os.makedirs(DIRECTORY_PATH)
 
 # GitHub Repo Reader setup function. Sets all initial parameters and handles data load of the repository
 # def load_github_repo(owner, repo, branch):

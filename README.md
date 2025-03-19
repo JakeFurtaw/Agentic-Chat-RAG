@@ -1,3 +1,4 @@
+### This app is in production and doesn't have all of the same features as version one yet! Give me some time
 # Chat RAG 2.0: Interactive Coding Assistant
 This new and improved version of Chat RAG works with the latest LLMs, the newest PyTorch, 
 and the newest version of Gradio. This allows the program to work with the new Nvidia Blackwell GPUs 
@@ -8,8 +9,8 @@ coming out soon.
 2. Install the required dependencies.
 3. Set up your .env file with the following:
 ````
-GRADIO_TEMP_DIR="YourPathTo/Chat-RAG/data"
-GRADIO_WATCH_DIRS="YourPathTo/Chat-RAG"
+GRADIO_TEMP_DIR="YourPathTo/ChatRAG2.0/data"
+GRADIO_WATCH_DIRS="YourPathTo/ChatRAG2.0"
 HUGGINGFACE_HUB_TOKEN="YOUR HF TOKEN HERE"
 NVIDIA_API_KEY="YOUR NVIDIA API KEY HERE"
 OPENAI_API_KEY="YOUR OpenAI API KEY HERE"

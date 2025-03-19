@@ -43,7 +43,6 @@ with gr.Blocks(title="Chat RAG 2.0", fill_width=True, css=css) as demo:
                                          interactive=True,
                                          size="sm",
                                          elem_id="button")
-                upload_status = gr.Textbox(label="Upload Status", interactive=False)
 
             with gr.Tab("Chat With a GitHub Repository"):
                 repoOwnerUsername = gr.Textbox(label="GitHub Repository Owners Username:",
