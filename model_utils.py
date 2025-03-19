@@ -19,7 +19,7 @@ def set_chat_model():
 
 def set_embedding_model():
     embed_model = HuggingFaceEmbedding(
-        model_name="/home/jake/Programming/Models/embedding/multilingual-e5-large-instruct",
+        model_name="/home/jake/Programming/Models/embedding/multilingual-e5-large-instruct",  #Change this to reflect where your local embedding model is
         device=set_device(0), trust_remote_code=True)
     return embed_model
 
