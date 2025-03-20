@@ -1,5 +1,6 @@
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.llms.ollama import Ollama
+from llama_index.llms.huggingface import HuggingFaceLLM
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 import torch
 
@@ -9,9 +10,18 @@ def set_device(gpu: int = None) -> str:
     return f"cuda:{gpu}" if torch.cuda.is_available() and gpu is not None else "cpu"
 
 def set_chat_model():
+
+    # llm = HuggingFaceLLM(
+    #     model_name="nvidia/Llama-3_3-Nemotron-Super-49B-v1",
+    #     context_window=120000,
+    #     generate_kwargs={
+    #         "temperature":0.7
+    #     }
+    # )
+
     llm = Ollama(
         model='mistral-nemo:latest',
-        temperature=.7,
+        temperature=0.7,
         context_window=120000,
         request_timeout=60,
         keep_alive='30s')# Keeps model alive for 30 seconds after last query
