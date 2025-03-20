@@ -12,26 +12,30 @@ def set_device(gpu: int = None) -> str:
 def set_chat_model():
 
     #TODO This model has reasoning. Use thinking=on or thinking=off and add it to the system prompt in the chat engine to try it
-    # llm = HuggingFaceLLM(
-    #     model_name="nvidia/Llama-3_3-Nemotron-Super-49B-v1",
-    #     context_window=120000,
-    #     generate_kwargs={
-    #         "temperature":0.7
-    #     }
-    # )
-
-    llm = Ollama(
-        model='mistral-nemo:latest',
-        temperature=0.7,
+    llm = HuggingFaceLLM(
+        model_name="nvidia/Llama-3_3-Nemotron-Super-49B-v1",
         context_window=120000,
-        request_timeout=60,
-        keep_alive='30s')# Keeps model alive for 30 seconds after last query
+        generate_kwargs={
+            "temperature":0.7
+        },
+        model_kwargs={
+            "trust_remote_code":True
+        }
+    )
+
+    # llm = Ollama(
+    #     model='mistral-nemo:latest',
+    #     temperature=0.7,
+    #     context_window=120000,
+    #     request_timeout=60,
+    #     keep_alive='30s')# Keeps model alive for 30 seconds after last query
     return llm
 
 def set_embedding_model():
     embed_model = HuggingFaceEmbedding(
         model_name="/home/jake/Programming/Models/embedding/multilingual-e5-large-instruct",  #Change this to reflect where your local embedding model is
-        device=set_device(0), trust_remote_code=True)
+        device=set_device(0),
+        trust_remote_code=True)
     return embed_model
 
 def set_chat_memory():
