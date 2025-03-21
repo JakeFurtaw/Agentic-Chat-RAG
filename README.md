@@ -12,14 +12,17 @@ Gradio. This allows the program to work with the new Nvidia Blackwell GPUs comin
 GRADIO_TEMP_DIR="YourPathTo/ChatRAG2.0/data"
 GRADIO_WATCH_DIRS="YourPathTo/ChatRAG2.0"
 HUGGINGFACE_HUB_TOKEN="YOUR HF TOKEN HERE"
-NVIDIA_API_KEY="YOUR NVIDIA API KEY HERE"
-OPENAI_API_KEY="YOUR OpenAI API KEY HERE"
-ANTHROPIC_API_KEY="YOUR Anthropic API KEY HERE"
 GITHUB_PAT="YOUR GITHUB PERSONAL ACCESS TOKEN HERE"
 LLAMA_CLOUD_API_KEY="YOUR LLAMA_CLOUD_API_KEY"
 ````
-4. Run the application:
+4. Change the model name of your embedding model to whatever model you want to use or the location of
+a downloaded huggingface model. This is located in model_utils.py
+```
+model_name="..."
+```
+
+5. Run the application:
 ````
 gradio chatrag.py
 ````
-5. The app will automatically open a new tab and launch in your browser.
+6. The app will automatically open a new tab and launch in your browser.
