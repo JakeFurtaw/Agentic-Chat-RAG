@@ -12,8 +12,10 @@ def set_device(gpu: int = None) -> str:
 def set_chat_model():
 
     #TODO This model has reasoning. Use thinking=on or thinking=off and add it to the system prompt in the chat engine to try it
+    #this only works for one question need to figure out why i cant have a full conversation...
     llm = HuggingFaceLLM(
         model_name="nvidia/Llama-3_3-Nemotron-Super-49B-v1",
+        tokenizer_name="nvidia/Llama-3_3-Nemotron-Super-49B-v1",
         context_window=120000,
         generate_kwargs={
             "temperature":0.7

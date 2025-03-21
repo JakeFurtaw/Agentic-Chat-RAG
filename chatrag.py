@@ -79,4 +79,4 @@ with gr.Blocks(title="Agentic Chat RAG", fill_width=True, css=css) as demo:
     # removeRepo.click(reset_github_info,
     #                  [],
     #                  [repoOwnerUsername, repoName, repoBranch, github_status])
-    demo.launch(inbrowser=True, share=True)
+    demo.launch(inbrowser=True) #, share=True
