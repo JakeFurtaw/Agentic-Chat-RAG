@@ -32,10 +32,8 @@ def clear_local_docs():
 #GitHub Repo Reader setup function. Sets all initial parameters and handles data load of the repository
 def load_github_repo(owner, repo, branch):
     if "GITHUB_PAT" in os.environ:
-        github_client = GithubClient(github_token=os.getenv("GITHUB_PAT"), verbose=True)
-        owner=owner
-        repo=repo
-        branch=branch
+        github_client = GithubClient(github_token=os.getenv("GITHUB_PAT"),
+                                     verbose=True)
         documents= GithubRepositoryReader(
             github_client=github_client,
             owner=owner,

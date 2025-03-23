@@ -4,6 +4,8 @@ from llama_index.core.chat_engine.types import ChatMode
 from doc_utils import load_local_docs, load_github_repo
 from model_utils import set_chat_model, set_embedding_model, set_chat_memory
 
+_chat_engine = None
+
 
 def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
     if len(docs)> 0:
@@ -54,9 +56,10 @@ def create_chat_engine():
     return setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt)
 
 def process_input(message):
-    chat_engine = create_chat_engine()
-
-    return chat_engine.stream_chat(message=message)
+    global _chat_engine
+    if _chat_engine is None:
+        _chat_engine = create_chat_engine()
+    return _chat_engine.stream_chat(message)
 
 def stream_response(message, history):
     response = process_input(message)
