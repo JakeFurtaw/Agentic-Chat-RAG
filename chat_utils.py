@@ -45,29 +45,34 @@ def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
     )
     return chat_engine
 
+class ChatEngine:
+    def __init__(self):
+        self.owner = None
+        self.branch = None
+        self.repo = None
 
-def create_chat_engine():
-    embed_model = set_embedding_model()
-    llm = set_chat_model()
-    docs = load_local_docs()
-    # docs += load_github_repo()  #TODO need to add an if statement to this
-    memory = set_chat_memory()
-    custom_prompt = None
-    return setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt)
+    def create_chat_engine(self):
+        embed_model = set_embedding_model()
+        llm = set_chat_model()
+        docs = load_local_docs()
+        docs += load_github_repo(self.owner, self.repo, self.branch)  #TODO need to add an if statement to this
+        memory = set_chat_memory()
+        custom_prompt = None
+        return setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt)
 
-def process_input(message):
-    global _chat_engine
-    if _chat_engine is None:
-        _chat_engine = create_chat_engine()
-    return _chat_engine.stream_chat(message)
+    def process_input(self, message):
+        global _chat_engine
+        if _chat_engine is None:
+            _chat_engine = self.create_chat_engine()
+        return _chat_engine.stream_chat(message)
 
-def stream_response(message, history):
-    response = process_input(message)
-    full_response = ''
-    for token in response.response_gen:
-        full_response += token
-        chat_history = history + [
-            {"role": "user", "content": message},
-            {"role": "assistant", "content": full_response}
-        ]
-        yield "", chat_history
+    def stream_response(self, message, history):
+        response = self.process_input(message)
+        full_response = ''
+        for token in response.response_gen:
+            full_response += token
+            chat_history = history + [
+                {"role": "user", "content": message},
+                {"role": "assistant", "content": full_response}
+            ]
+            yield "", chat_history

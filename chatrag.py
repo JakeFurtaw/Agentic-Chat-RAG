@@ -1,5 +1,5 @@
 import gradio as gr
-from chat_utils import stream_response
+from chat_utils import ChatEngine
 from doc_utils import clear_local_docs, load_github_repo
 
 css = """
@@ -66,7 +66,7 @@ with gr.Blocks(title="Agentic Chat RAG", fill_width=True, css=css) as demo:
                 github_status = gr.Textbox(label="GitHub Status", interactive=False)
 
     # Set up event handlers
-    msg.submit(stream_response, [msg, chatbot], [msg, chatbot])
+    msg.submit(ChatEngine.stream_response, [msg, chatbot], [msg, chatbot])
     # clear_chat_mem.click(clear_all_memory, [], [chatbot, msg])
     #
     # # File upload handlers
