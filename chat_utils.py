@@ -4,8 +4,6 @@ from llama_index.core.chat_engine.types import ChatMode
 from doc_utils import load_local_docs, load_github_repo
 from model_utils import set_chat_model, set_embedding_model, set_chat_memory
 
-_chat_engine = None
-
 
 def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
     if len(docs)> 0:
@@ -50,21 +48,22 @@ class ChatEngine:
         self.owner = None
         self.branch = None
         self.repo = None
+        self.chat_engine = None
 
     def create_chat_engine(self):
         embed_model = set_embedding_model()
         llm = set_chat_model()
         docs = load_local_docs()
-        docs += load_github_repo(self.owner, self.repo, self.branch)  #TODO need to add an if statement to this
+        if all([self.repo, self.owner, self.branch != ""]):
+            docs += load_github_repo(self.owner, self.repo, self.branch)
         memory = set_chat_memory()
         custom_prompt = None
         return setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt)
 
     def process_input(self, message):
-        global _chat_engine
-        if _chat_engine is None:
-            _chat_engine = self.create_chat_engine()
-        return _chat_engine.stream_chat(message)
+        if self.chat_engine is None:
+            self.chat_engine = self.create_chat_engine()
+        return self.chat_engine.stream_chat(message)
 
     def stream_response(self, message, history):
         response = self.process_input(message)
@@ -76,3 +75,15 @@ class ChatEngine:
                 {"role": "assistant", "content": full_response}
             ]
             yield "", chat_history
+
+    def set_github_info(self, owner ,repo, branch):
+        owner, repo, branch = self.owner, self.repo,  self.branch
+        self.reset_chat_engine()
+
+    def reset_github_info(self, owner ,repo, branch):
+        self.owner = self.repo = self.branch = ""
+        self.set_github_info(self.owner,self.repo,self.branch)
+        self.reset_chat_engine()
+
+    def reset_chat_engine(self):
+        self.chat_engine = self.create_chat_engine()
