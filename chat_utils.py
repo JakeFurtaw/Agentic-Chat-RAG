@@ -76,13 +76,13 @@ class ChatEngine:
             ]
             yield "", chat_history
 
-    def set_github_info(self, owner ,repo, branch):
-        owner, repo, branch = self.owner, self.repo,  self.branch
+    def set_github_info(self, owner, repo, branch):
+        owner, repo, branch = self.owner, self.repo, self.branch
         self.reset_chat_engine()
 
-    def reset_github_info(self, owner ,repo, branch):
+    def reset_github_info(self, owner, repo, branch):
         self.owner = self.repo = self.branch = ""
-        self.set_github_info(self.owner,self.repo,self.branch)
+        self.set_github_info(self.owner, self.repo, self.branch)
         self.reset_chat_engine()
 
     def reset_chat_engine(self):
