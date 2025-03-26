@@ -16,33 +16,32 @@ def set_chat_model():
     #this only works for one question need to figure out why i cant have a full conversation...
     torch.cuda.empty_cache()
     gc.collect()
-    llm = HuggingFaceLLM(
-        model_name="nvidia/Llama-3_3-Nemotron-Super-49B-v1",
-        tokenizer_name="nvidia/Llama-3_3-Nemotron-Super-49B-v1",
-        context_window=120000,
-        max_new_tokens=2500,
-        is_chat_model=True,
-        device_map=set_device(0),
-        generate_kwargs={
-            "temperature":0.7,
-            "do_sample": True,
-        },
-        model_kwargs={
-            "quantization_config": BitsAndBytesConfig(
-                load_in_4bit=True,
-                bnb_4bit_compute_dtype=torch.bfloat16,
-                bnb_4bit_quant_type="nf4"
-            ),
-            "trust_remote_code":True
-        }
-    )
-
-    # llm = Ollama(
-    #     model='llama3.3:latest',
-    #     temperature=0.7,
+    # llm = HuggingFaceLLM(
+    #     model_name="nvidia/Llama-3_3-Nemotron-Super-49B-v1",
+    #     tokenizer_name="nvidia/Llama-3_3-Nemotron-Super-49B-v1",
     #     context_window=120000,
-    #     request_timeout=60,
-    #     keep_alive='30s')# Keeps model alive for 30 seconds after last query
+    #     max_new_tokens=2500,
+    #     is_chat_model=True,
+    #     device_map=set_device(0),
+    #     generate_kwargs={
+    #         "temperature":0.7,
+    #         "do_sample": True,
+    #     },
+    #     model_kwargs={
+    #         "quantization_config": BitsAndBytesConfig(
+    #             load_in_4bit=True,
+    #             bnb_4bit_compute_dtype=torch.bfloat16,
+    #             bnb_4bit_quant_type="nf4"
+    #         ),
+    #         "trust_remote_code":True
+    #     }
+    # )
+
+    llm = Ollama(
+        model='llama3.3:latest',
+        temperature=0.7,
+        context_window=120000,
+        request_timeout=60)
     return llm
 
 def set_embedding_model():

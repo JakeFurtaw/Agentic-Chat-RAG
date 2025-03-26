@@ -65,7 +65,7 @@ class ChatEngine:
             self.chat_engine = self.create_chat_engine()
         return self.chat_engine.stream_chat(message)
 
-    def stream_response(self, message, history):
+    def stream_response(self, message: str, history):
         response = self.process_input(message)
         full_response = ''
         for token in response.response_gen:
@@ -77,13 +77,14 @@ class ChatEngine:
             yield "", chat_history
 
     def set_github_info(self, owner, repo, branch):
-        owner, repo, branch = self.owner, self.repo, self.branch
+        self.owner, self.repo, self.branch = owner, repo, branch
         self.reset_chat_engine()
 
-    def reset_github_info(self, owner, repo, branch):
+    def reset_github_info(self):
         self.owner = self.repo = self.branch = ""
         self.set_github_info(self.owner, self.repo, self.branch)
         self.reset_chat_engine()
+        return self.owner, self.repo, self.branch
 
     def reset_chat_engine(self):
-        self.chat_engine = self.create_chat_engine()
+        self.chat_engine = None
