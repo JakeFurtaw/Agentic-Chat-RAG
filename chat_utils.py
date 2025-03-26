@@ -6,7 +6,7 @@ from model_utils import set_chat_model, set_embedding_model, set_chat_memory
 
 
 def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
-    if len(docs)> 0:
+    if len(docs) > 0:
         chat_mode = ChatMode.CONTEXT
     else:
         chat_mode = ChatMode.SIMPLE
