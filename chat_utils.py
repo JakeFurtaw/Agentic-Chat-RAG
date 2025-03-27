@@ -23,13 +23,11 @@ def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
         "approaches, outline the pros and cons of each. Always Remember to be friendly! \n"
         "Response:"
     )
-    system_message = ChatMessage(role=MessageRole.SYSTEM,
-                                 content=chat_prompt if custom_prompt is None else custom_prompt)
     chat_engine = index.as_chat_engine(
         chat_mode=chat_mode,
         memory=memory,
         stream=True,
-        system_prompt=system_message,
+        system_prompt=chat_prompt if custom_prompt is None else custom_prompt,
         llm=llm,
         verbose=True,
         context_prompt=("Context information is below.\n"
@@ -42,6 +40,7 @@ def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
                         "Answer: ")
     )
     return chat_engine
+
 
 class ChatEngine:
     def __init__(self):
@@ -65,7 +64,7 @@ class ChatEngine:
             self.chat_engine = self.create_chat_engine()
         return self.chat_engine.stream_chat(message)
 
-    def stream_response(self, message: str, history):
+    def stream_response(self, message, history):
         response = self.process_input(message)
         full_response = ''
         for token in response.response_gen:
@@ -88,3 +87,4 @@ class ChatEngine:
 
     def reset_chat_engine(self):
         self.chat_engine = None
+
