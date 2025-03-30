@@ -24,6 +24,7 @@ def load_local_docs():
             documents.extend(SimpleDirectoryReader(input_files=[file]).load_data())
     return documents
 
+#Clearing data folder(Local Docs)
 def clear_local_docs():
     if os.path.exists(DIRECTORY_PATH):
         shutil.rmtree(DIRECTORY_PATH)
