@@ -1,6 +1,5 @@
 from llama_index.core.agent.react import ReActAgent
 from llama_index.core.tools import FunctionTool
-# from llama_index.readers.web import SimpleWebPageReader
 from model_utils import set_chat_model
 from doc_utils import load_local_docs, load_github_repo
 import os
@@ -134,41 +133,67 @@ class AgentTools:
         except Exception as e:
             return f"Error accessing GitHub repository: {str(e)}"
 
-    # def use_web_search(self, url: str = None, query: str = None) -> str:
-    #     """
-    #     Tool to search and extract information from web pages.
-    #
-    #     Args:
-    #         url (str): The URL of the web page to search.
-    #         query (str): The specific information or question to search for on the web page.
-    #
-    #     Returns:
-    #         str: Information extracted from the web page relevant to the query.
-    #     """
-    #     try:
-    #         if not url:
-    #             return "URL is required for web search."
-    #
-    #         # documents = SimpleWebPageReader().load_data([url])
-    #         if not documents:
-    #             return f"No content found at URL: {url}"
-    #
-    #         from llama_index.core import VectorStoreIndex
-    #         from model_utils import set_embedding_model
-    #
-    #         embed_model = set_embedding_model()
-    #         index = VectorStoreIndex.from_documents(documents, embed_model=embed_model)
-    #         query_engine = index.as_query_engine()
-    #
-    #         if query:
-    #             response = query_engine.query(query)
-    #             return f"Web Search Result: {response.response}"
-    #         else:
-    #             content_preview = documents[0].text[:200] + "..." if len(documents[0].text) > 200 else documents[0].text
-    #             return f"Retrieved content from {url}:\n{content_preview}"
-    #
-    #     except Exception as e:
-    #         return f"Error accessing web page: {str(e)}"
+    def use_web_search(self, url: str = None, query: str = None) -> str:
+        """
+        Tool to search and extract information from web pages.
+
+        Args:
+            url (str): The URL of the web page to search.
+            query (str): The specific information or question to search for on the web page.
+
+        Returns:
+            str: Information extracted from the web page relevant to the query.
+        """
+        try:
+            if not url:
+                return "URL is required for web search."
+
+            # Using requests and BeautifulSoup for web scraping
+            import requests
+            from bs4 import BeautifulSoup
+            from llama_index.core import Document
+
+            # Fetch the web page
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+            response = requests.get(url, headers=headers)
+
+            if response.status_code != 200:
+                return f"Failed to retrieve content from {url}. Status code: {response.status_code}"
+
+            # Parse HTML content
+            soup = BeautifulSoup(response.text, 'html.parser')
+
+            # Extract text content and clean it up
+            # Remove script and style elements
+            for script in soup(["script", "style"]):
+                script.extract()
+
+            # Get text
+            text = soup.get_text()
+            lines = [line.strip() for line in text.splitlines() if line.strip()]
+            text = ' '.join(lines)
+
+            # Create a Document object
+            documents = [Document(text=text, metadata={"source": url})]
+
+            from llama_index.core import VectorStoreIndex
+            from model_utils import set_embedding_model
+
+            embed_model = set_embedding_model()
+            index = VectorStoreIndex.from_documents(documents, embed_model=embed_model)
+            query_engine = index.as_query_engine()
+
+            if query:
+                response = query_engine.query(query)
+                return f"Web Search Result: {response.response}"
+            else:
+                content_preview = text[:200] + "..." if len(text) > 200 else text
+                return f"Retrieved content from {url}:\n{content_preview}"
+
+        except Exception as e:
+            return f"Error accessing web page: {str(e)}"
 
     def run_agent(self, query: str) -> str:
         """Run the agent with the user's query and return the response."""
