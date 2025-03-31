@@ -3,6 +3,7 @@ from llama_index.core.llms import ChatMessage, MessageRole
 from llama_index.core.chat_engine.types import ChatMode
 from doc_utils import load_local_docs, load_github_repo
 from model_utils import set_chat_model, set_embedding_model, set_chat_memory
+from agent_utils import AgentTools
 
 
 def setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt):
@@ -48,6 +49,8 @@ class ChatEngine:
         self.branch = None
         self.repo = None
         self.chat_engine = None
+        self.agent_tools = None
+        self.use_agent_mode = False
 
     def create_chat_engine(self):
         embed_model = set_embedding_model()
@@ -58,6 +61,12 @@ class ChatEngine:
         memory = set_chat_memory()
         custom_prompt = None
         return setup_index_and_chat_engine(docs, embed_model, llm, memory, custom_prompt)
+
+    def create_agent(self):
+        if self.agent_tools is None:
+            self.agent_tools = AgentTools()
+        return self.agent_tools
+
 
     def process_input(self, message):
         if self.chat_engine is None:
@@ -88,3 +97,10 @@ class ChatEngine:
     def reset_chat_engine(self):
         self.chat_engine = None
 
+    def toggle_agent_mode(self, enabled=None):
+        """Toggle between agent mode and regular chat mode"""
+        if enabled is not None:
+            self.use_agent_mode = enabled
+        else:
+            self.use_agent_mode = not self.use_agent_mode
+        return self.use_agent_mode

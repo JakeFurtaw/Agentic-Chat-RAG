@@ -28,6 +28,7 @@ with gr.Blocks(title="Agentic Chat RAG", fill_width=True, css=css) as demo:
                                        elem_id="button")
                 clear_chat_mem = gr.Button(value="Clear Chat Window and Chat Memory",
                                            elem_id="button")
+                agent_mode = gr.Checkbox(label="Use Agent Mode", value=False, interactive=True)
 
         with gr.Column(scale=3):
             with gr.Tab("Chat With Files"):
@@ -64,11 +65,22 @@ with gr.Blocks(title="Agentic Chat RAG", fill_width=True, css=css) as demo:
                                            size="sm",
                                            interactive=True,
                                            elem_id="button")
-                github_status = gr.Textbox(label="GitHub Status", interactive=False)
+
+            with gr.Tab("Web Search"):
+                url_input = gr.Textbox(label="Web URL:",
+                                       placeholder="Enter a URL to search...",
+                                       interactive=True)
+                search_button = gr.Button(value="Add URL to Knowledge Base",
+                                          size="sm",
+                                          interactive=True,
+                                          elem_id="button")
 
     # Set up event handlers
     msg.submit(chat.stream_response, [msg, chatbot], [msg, chatbot])
     # clear_chat_mem.click(clear_all_memory, [], [chatbot, msg])
+
+    # Agent mode toggle
+    agent_mode.change(chat.toggle_agent_mode, [agent_mode], [])
 
     # # File upload handlers
     upload.click(lambda: chat.reset_chat_engine())
