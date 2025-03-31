@@ -23,14 +23,18 @@ with gr.Blocks(title="Agentic Chat RAG", fill_width=True, css=css) as demo:
                              interactive=True,
                              container=True)
             with gr.Row():
-                clear = gr.ClearButton([msg, chatbot],
-                                       value="Clear Chat Window",
-                                       elem_id="button")
-                clear_chat_mem = gr.Button(value="Clear Chat Window and Chat Memory",
-                                           elem_id="button")
-                agent_mode = gr.Checkbox(label="Use Agent Mode", value=False, interactive=True)
-
+                with gr.Column(scale=1):
+                    with gr.Row():
+                        agent_mode = gr.Checkbox(label="Use Agent Mode", value=False, interactive=True)
+                with gr.Column(scale=9):
+                    with gr.Row():
+                        clear = gr.ClearButton([msg, chatbot],
+                                               value="Clear Chat Window",
+                                               elem_id="button")
+                        clear_chat_mem = gr.Button(value="Clear Chat Window and Chat Memory",
+                                                   elem_id="button")
         with gr.Column(scale=3):
+            gr.Markdown("## <center>Add your data source(s)</center>")
             with gr.Tab("Chat With Files"):
                 files = gr.Files(interactive=True,
                                  file_count="multiple",
@@ -74,7 +78,6 @@ with gr.Blocks(title="Agentic Chat RAG", fill_width=True, css=css) as demo:
                                           size="sm",
                                           interactive=True,
                                           elem_id="button")
-
     # Set up event handlers
     msg.submit(chat.stream_response, [msg, chatbot], [msg, chatbot])
     # clear_chat_mem.click(clear_all_memory, [], [chatbot, msg])
