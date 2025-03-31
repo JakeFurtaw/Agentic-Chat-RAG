@@ -69,9 +69,11 @@ class ChatEngine:
 
 
     def process_input(self, message):
+        if self.agent_tools is not None and self.use_agent_mode is True:
+            return AgentTools.run_agent(self.agent_tools, message)
         if self.chat_engine is None:
             self.chat_engine = self.create_chat_engine()
-        return self.chat_engine.stream_chat(message)
+            return self.chat_engine.stream_chat(message)
 
     def stream_response(self, message, history):
         response = self.process_input(message)

@@ -32,8 +32,9 @@ class AgentTools:
         """Set up all available tools for the agent."""
         # Add tools to the list
         self.tools.append(FunctionTool.from_defaults(fn=self.use_local_files))
-        self.tools.append(FunctionTool.from_defaults(fn=self.use_github_repo))
-        self.tools.append(FunctionTool.from_defaults(fn=self.use_web_search))
+        if os.getenv("GITHUB_PAT"):
+            self.tools.append(FunctionTool.from_defaults(fn=self.use_github_repo))
+        # self.tools.append(FunctionTool.from_defaults(fn=self.use_web_search))
         if self.tavily_client:
             self.tools.append(FunctionTool.from_defaults(fn=self.use_tavily_search))
 
@@ -91,6 +92,12 @@ class AgentTools:
             verbose=True
         )
         return self.agent
+
+    def run_agent(self, query: str) -> str:
+        """Run the agent with the user's query and return the response."""
+        if not self.agent:
+            self.create_agent()
+        return self.agent.stream_chat(query)
 
 
     def use_local_files(self, query: str = None, directory: str = "data") -> str:
@@ -157,51 +164,6 @@ class AgentTools:
             return f"Error accessing GitHub repository: {str(e)}"
 
 
-    def use_web_search(self, url: str = None, query: str = None) -> str:
-        """
-        Tool to search and extract information from web pages.
-
-        Args:
-            url (str): The URL of the web page to search.
-            query (str): The specific information or question to search for on the web page.
-
-        Returns:
-            str: Information extracted from the web page relevant to the query.
-        """
-        try:
-            if not url:
-                return "URL is required for web search."
-            # Fetch the web page
-            headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-            }
-            response = requests.get(url, headers=headers)
-            if response.status_code != 200:
-                return f"Failed to retrieve content from {url}. Status code: {response.status_code}"
-            # Parse HTML content
-            soup = BeautifulSoup(response.text, 'html.parser')
-            # Remove script and style elements
-            for script in soup(["script", "style"]):
-                script.extract()
-            # Get text
-            text = soup.get_text()
-            lines = [line.strip() for line in text.splitlines() if line.strip()]
-            text = ' '.join(lines)
-            # Create a Document object
-            documents = [Document(text=text, metadata={"source": url})]
-
-            embed_model = set_embedding_model()
-            index = VectorStoreIndex.from_documents(documents, embed_model=embed_model)
-            query_engine = index.as_query_engine()
-            if query:
-                response = query_engine.query(query)
-                return f"Web Search Result: {response.response}"
-            else:
-                content_preview = text[:200] + "..." if len(text) > 200 else text
-                return f"Retrieved content from {url}:\n{content_preview}"
-        except Exception as e:
-            return f"Error accessing web page: {str(e)}"
-
     def use_tavily_search(self, query: str, search_depth: str = "basic", max_results: int = 5) -> str:
         """
         Tool to search the web using Tavily's AI search engine.
@@ -258,11 +220,49 @@ class AgentTools:
             return f"Error using Tavily search: {str(e)}"
 
 
-    def run_agent(self, query: str) -> str:
-        """Run the agent with the user's query and return the response."""
-        if not self.agent:
-            self.create_agent()
+    # def use_web_search(self, url: str = None, query: str = None) -> str:
+    #     """
+    #     Tool to search and extract information from web pages.
+    #
+    #     Args:
+    #         url (str): The URL of the web page to search.
+    #         query (str): The specific information or question to search for on the web page.
+    #
+    #     Returns:
+    #         str: Information extracted from the web page relevant to the query.
+    #     """
+    #     try:
+    #         if not url:
+    #             return "URL is required for web search."
+    #         # Fetch the web page
+    #         headers = {
+    #             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    #         }
+    #         response = requests.get(url, headers=headers)
+    #         if response.status_code != 200:
+    #             return f"Failed to retrieve content from {url}. Status code: {response.status_code}"
+    #         # Parse HTML content
+    #         soup = BeautifulSoup(response.text, 'html.parser')
+    #         # Remove script and style elements
+    #         for script in soup(["script", "style"]):
+    #             script.extract()
+    #         # Get text
+    #         text = soup.get_text()
+    #         lines = [line.strip() for line in text.splitlines() if line.strip()]
+    #         text = ' '.join(lines)
+    #         # Create a Document object
+    #         documents = [Document(text=text, metadata={"source": url})]
+    #
+    #         embed_model = set_embedding_model()
+    #         index = VectorStoreIndex.from_documents(documents, embed_model=embed_model)
+    #         query_engine = index.as_query_engine()
+    #         if query:
+    #             response = query_engine.query(query)
+    #             return f"Web Search Result: {response.response}"
+    #         else:
+    #             content_preview = text[:200] + "..." if len(text) > 200 else text
+    #             return f"Retrieved content from {url}:\n{content_preview}"
+    #     except Exception as e:
+    #         return f"Error accessing web page: {str(e)}"
 
-        response = self.agent.chat(query)
-        return response
 
