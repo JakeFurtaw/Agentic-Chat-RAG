@@ -15,10 +15,12 @@ class AgentTools:
         self.llm = set_chat_model()
         self.agent = None
         self.tools = []
+        self.tavily_client = None
+        self.setup_tavily_client()
         self.setup_tools()
         self.create_agent()
-        self.setup_tavily_client()
-        self.tavily_client = None
+
+
 
     def setup_tavily_client(self):
         """Initialize the Tavily client with API key from environment variables."""
@@ -39,6 +41,7 @@ class AgentTools:
             self.tools.append(FunctionTool.from_defaults(fn=self.use_tavily_search))
 
 
+
     def create_agent(self):
         """Create the ReActAgent with the configured tools and LLM."""
         system_prompt = (
@@ -48,7 +51,6 @@ class AgentTools:
             "Available tools:"
             "\n- use_local_files: Search through local project files for relevant code, documentation, or data"
             "\n- use_github_repo: Access and analyze GitHub repositories to find solutions or examples"
-            "\n- use_web_search: Look up information from specific web pages to answer technical questions"
         )
 
         # Add Tavily tool to system prompt if available
@@ -61,18 +63,17 @@ class AgentTools:
             "\n1. ALWAYS consider which tool is most appropriate before responding"
             "\n2. For code questions about the user's files, use the local_files tool first"
             "\n3. For open source projects or examples, use the github_repo tool"
-            "\n4. For documentation or technical articles, use the web_search tool"
         )
 
         # Add Tavily guideline if available
         if self.tavily_client:
             system_prompt += "\n5. For up-to-date information or general web searches, use the tavily_search tool"
             # Adjust numbering for subsequent guidelines
-            system_prompt += "\n6. You may use multiple tools in sequence to build a comprehensive answer"
+            system_prompt += "\n6. You may use multiple tools in sequence to build a comprehensive answer but only if needed"
             system_prompt += "\n7. Think step by step to decompose complex questions into subtasks that can be handled by individual tools"
             system_prompt += "\n8. After gathering information with tools, synthesize it into a clear, concise response"
         else:
-            system_prompt += "\n5. You may use multiple tools in sequence to build a comprehensive answer"
+            system_prompt += "\n5. You may use multiple tools in sequence to build a comprehensive answer but only if needed"
             system_prompt += "\n6. Think step by step to decompose complex questions into subtasks that can be handled by individual tools"
             system_prompt += "\n7. After gathering information with tools, synthesize it into a clear, concise response"
 
@@ -89,7 +90,7 @@ class AgentTools:
             tools=self.tools,
             llm=self.llm,
             system_prompt=system_prompt,
-            verbose=True
+            verbose=False
         )
         return self.agent
 
@@ -98,6 +99,7 @@ class AgentTools:
         if not self.agent:
             self.create_agent()
         return self.agent.stream_chat(query)
+
 
 
     def use_local_files(self, query: str = None, directory: str = "data") -> str:
@@ -185,7 +187,7 @@ class AgentTools:
                 return "A search query is required for Tavily search."
 
             # Validate search_depth parameter
-            if search_depth not in ["basic", "comprehensive"]:
+            if search_depth not in ["basic", "advanced"]:
                 search_depth = "basic"
 
             # Validate max_results parameter

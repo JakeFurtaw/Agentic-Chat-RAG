@@ -103,6 +103,7 @@ class ChatEngine:
         """Toggle between agent mode and regular chat mode"""
         if enabled is not None:
             self.use_agent_mode = enabled
+            self.create_agent()
         else:
             self.use_agent_mode = not self.use_agent_mode
         return self.use_agent_mode

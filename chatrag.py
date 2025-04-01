@@ -74,7 +74,7 @@ with gr.Blocks(title="Agentic Chat RAG", fill_width=True, css=css) as demo:
     # clear_chat_mem.click(clear_all_memory, [], [chatbot, msg])
 
     # Agent mode toggle
-    agent_mode.change(chat.toggle_agent_mode, [], [agent_mode])
+    agent_mode.change(chat.toggle_agent_mode, [agent_mode], [agent_mode])
 
     # # File upload handlers
     upload.click(lambda: chat.reset_chat_engine())
