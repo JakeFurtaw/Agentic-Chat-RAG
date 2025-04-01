@@ -88,12 +88,14 @@ class ChatEngine:
 
     def set_github_info(self, owner, repo, branch):
         self.owner, self.repo, self.branch = owner, repo, branch
-        self.reset_chat_engine()
+        if self.use_agent_mode is False:
+            self.reset_chat_engine()
 
     def reset_github_info(self):
         self.owner = self.repo = self.branch = ""
         self.set_github_info(self.owner, self.repo, self.branch)
-        self.reset_chat_engine()
+        if self.use_agent_mode is False:
+            self.reset_chat_engine()
         return self.owner, self.repo, self.branch
 
     def reset_chat_engine(self):

@@ -90,7 +90,7 @@ class AgentTools:
             tools=self.tools,
             llm=self.llm,
             system_prompt=system_prompt,
-            verbose=False
+            verbose=True                           #Make this false for clean production ready outputs
         )
         return self.agent
 
