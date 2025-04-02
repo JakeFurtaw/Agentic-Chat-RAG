@@ -3,9 +3,9 @@ from llama_index.core.tools import FunctionTool
 from llama_index.core import VectorStoreIndex
 from model_utils import set_chat_model, set_embedding_model, set_chat_memory
 from doc_utils import load_local_docs, load_github_repo
-import os
 from tavily import TavilyClient
-import dotenv
+import os, dotenv
+
 
 dotenv.load_dotenv()
 
@@ -89,7 +89,7 @@ class AgentTools:
         except Exception as e:
             return f"Error accessing GitHub repository: {str(e)}"
 
-    def use_tavily_search(self, query: str, search_depth: str = "basic", max_results: int = 5) -> str:
+    def use_tavily_search(self, query: str, search_depth: str = "basic", max_results: int = 5) -> str:  # type: ignore[Literal]
         """Search the web using Tavily."""
         try:
             if not query:
