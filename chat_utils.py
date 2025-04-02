@@ -67,24 +67,32 @@ class ChatEngine:
             self.agent_tools = AgentTools()
         return self.agent_tools
 
-
     def process_input(self, message):
         if self.agent_tools is not None and self.use_agent_mode is True:
             return AgentTools.run_agent(self.agent_tools, message)
         if self.chat_engine is None:
             self.chat_engine = self.create_chat_engine()
-            return self.chat_engine.stream_chat(message)
+        return self.chat_engine.stream_chat(message)
 
     def stream_response(self, message, history):
         response = self.process_input(message)
         full_response = ''
-        for token in response.response_gen:
-            full_response += token
-            chat_history = history + [
-                {"role": "user", "content": message},
-                {"role": "assistant", "content": full_response}
-            ]
-            yield "", chat_history
+        if isinstance(response, str):
+            for token in response.response_gen:
+                full_response += token
+                chat_history = history + [
+                    {"role": "user", "content": message},
+                    {"role": "assistant", "content": full_response}
+                ]
+                yield "", chat_history
+        else:
+            for token in response.response_gen:
+                full_response += token
+                chat_history = history + [
+                    {"role": "user", "content": message},
+                    {"role": "assistant", "content": full_response}
+                ]
+                yield "", chat_history
 
     def set_github_info(self, owner, repo, branch):
         self.owner, self.repo, self.branch = owner, repo, branch

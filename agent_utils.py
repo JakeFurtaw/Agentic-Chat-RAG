@@ -23,10 +23,10 @@ class AgentTools:
     def create_agent(self):
         """Create the ReActAgent with tools and a concise system prompt."""
         tools = [
-            FunctionTool.from_defaults(fn=self.use_local_files),
+            FunctionTool.from_defaults(fn=self.use_local_files, name='Local_File_Tool'),
         ]
         if os.getenv("GITHUB_PAT"):
-            tools.append(FunctionTool.from_defaults(fn=self.use_github_repo))
+            tools.append(FunctionTool.from_defaults(fn=self.use_github_repo, name='GitHub_Repo_Tool'))
         if self.tavily_client:
             tools.append(FunctionTool.from_defaults(fn=self.use_tavily_search))
 
@@ -35,21 +35,19 @@ class AgentTools:
             "Your goal is to understand the user's query and provide a clear and concise answer. Only use tools if you need to"
             "If you need to use tools strategically choose the appropriate tools to answer the query."
             "\n\n"
-            "Available tools:"
-            "\n- use_local_files: Search through local project files for relevant code, documentation, or data"
-            "\n- use_github_repo: Access and analyze GitHub repositories to find solutions or examples"
             "Tools:\n"
             "- use_local_files: If query asks about files or to Search local files for code/data use this tool\n"
             "- use_github_repo: If the query asks to Analyze GitHub repos use this tool\n"
             f"{'- use_tavily_search: Web search via Tavily only if both other tools dont help or if '
                'query refers to something that knowledge base doesnt cover\n' if self.tavily_client else ''}"
             "Guidelines:\n"
-            "1. Choose the best tool for the query based off of what the query says\n"
-            "2. Use local_files for file-related questions. always use this tool first\n"
-            "3. Use github_repo for repo-related queries\n"
-            f"{'4. Use tavily_search for web info if needed and only as a last result.\n' if self.tavily_client else ''}"
-            "5. Explain code, suggest improvements, and provide working solutions\n"
-            "6. Be explicit about your reasoning and tool usage"
+            "1. If you need to use tools which you will not always need to!!"
+            "2. Choose the best tool for the query based off of what the query says\n"
+            "3. Use local_files for file-related questions. always use this tool first\n"
+            "4. Use github_repo for repo-related queries\n"
+            f"{'5. Use tavily_search for web info if needed and only as a last result.\n' if self.tavily_client else ''}"
+            "6. Explain code, suggest improvements, and provide working solutions\n"
+            "7. Be explicit about your reasoning and tool usage"
         )
 
         self.agent = ReActAgent.from_tools(
@@ -57,13 +55,14 @@ class AgentTools:
             llm=self.llm,
             memory=self.chat_memory,
             system_prompt=system_prompt,
-            verbose=False
+            verbose=False,
+            max_iterations=5
         )
         return self.agent
 
-    def run_agent(self, query: str) -> str:
-        """Run the agent with the user's query."""
-        return self.agent.stream_chat(query)
+    def run_agent(self, query: str):
+        response = self.agent.stream_chat(query)
+        return response
 
     def _query_documents(self, documents, query=None):
         """Helper to query a document set and return results."""
@@ -73,7 +72,7 @@ class AgentTools:
         query_engine = index.as_query_engine(llm=self.llm)
         if query:
             response = query_engine.query(query)
-            return f"Result: {response.response}"
+            return f"Result: {response}"
         file_count = len(documents)
         file_names = [doc.metadata.get('file_name', 'Unknown') for doc in documents]
         return f"Found {file_count} files: {', '.join(file_names[:5])}{'...' if file_count > 5 else ''}"
@@ -86,11 +85,11 @@ class AgentTools:
         except Exception as e:
             return f"Error accessing local files: {str(e)}"
 
-    def use_github_repo(self, owner: str = None, repo: str = None, branch: str = "main", query: str = None) -> str:
+    def use_github_repo(self, owner: str = None, repo: str = None, branch: str = None, query: str = None) -> str:
         """Search a GitHub repo for relevant info."""
         try:
-            if not all([owner, repo]):
-                return "GitHub repository owner and name are required."
+            if not all([owner, repo, branch]):
+                return "GitHub repository owner branch and name are required."
             documents = load_github_repo(owner, repo, branch)
             return self._query_documents(documents, query)
         except Exception as e:
