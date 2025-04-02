@@ -31,7 +31,13 @@ class AgentTools:
             tools.append(FunctionTool.from_defaults(fn=self.use_tavily_search))
 
         system_prompt = (
-            "You are an AI coding assistant for programming tasks. Answer clearly using your knowledge or tools as needed.\n"
+            "You are an AI coding assistant with access to specialized tools to help solve complex programming tasks. "
+            "Your goal is to understand the user's query and provide a clear and concise answer. Only use tools if you need to"
+            "If you need to use tools strategically choose the appropriate tools to answer the query."
+            "\n\n"
+            "Available tools:"
+            "\n- use_local_files: Search through local project files for relevant code, documentation, or data"
+            "\n- use_github_repo: Access and analyze GitHub repositories to find solutions or examples"
             "Tools:\n"
             "- use_local_files: If query asks about files or to Search local files for code/data use this tool\n"
             "- use_github_repo: If the query asks to Analyze GitHub repos use this tool\n"
