@@ -33,14 +33,15 @@ class AgentTools:
         system_prompt = (
             "You are an AI coding assistant for programming tasks. Answer clearly using your knowledge or tools as needed.\n"
             "Tools:\n"
-            "- use_local_files: Search local files for code/data\n"
-            "- use_github_repo: Analyze GitHub repos (if PAT set)\n"
-            f"{'- use_tavily_search: Web search via Tavily (if API key set)\n' if self.tavily_client else ''}"
+            "- use_local_files: If query asks about files or to Search local files for code/data use this tool\n"
+            "- use_github_repo: If the query asks to Analyze GitHub repos use this tool\n"
+            f"{'- use_tavily_search: Web search via Tavily only if both other tools dont help or if '
+               'query refers to something that knowledge base doesnt cover\n' if self.tavily_client else ''}"
             "Guidelines:\n"
-            "1. Choose the best tool for the query\n"
-            "2. Use local_files for file-related questions\n"
+            "1. Choose the best tool for the query based off of what the query says\n"
+            "2. Use local_files for file-related questions. always use this tool first\n"
             "3. Use github_repo for repo-related queries\n"
-            f"{'4. Use tavily_search for web info if needed\n' if self.tavily_client else ''}"
+            f"{'4. Use tavily_search for web info if needed and only as a last result.\n' if self.tavily_client else ''}"
             "5. Explain code, suggest improvements, and provide working solutions\n"
             "6. Be explicit about your reasoning and tool usage"
         )
@@ -89,12 +90,12 @@ class AgentTools:
         except Exception as e:
             return f"Error accessing GitHub repository: {str(e)}"
 
-    def use_tavily_search(self, query: str, search_depth: str = "basic", max_results: int = 5) -> str:  # type: ignore[Literal]
+    def use_tavily_search(self, query: str, search_depth: str = "basic", max_results: int = 5) -> str:
         """Search the web using Tavily."""
         try:
             if not query:
                 return "A search query is required."
-            if search_depth not in ["basic", "advanced"]:
+            if search_depth not in ["basic", "advanced"]:  #might want to add a way to change between basic and advanced
                 search_depth = "basic"
             max_results = min(max(1, max_results), 10)
             search_result = self.tavily_client.search(query=query,
