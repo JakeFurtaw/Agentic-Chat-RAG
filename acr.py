@@ -1,7 +1,4 @@
 import gradio as gr
-from chat_utils import ChatEngine
-from doc_utils import clear_local_docs
-chat = ChatEngine()
 
 css = """
 .gradio-container{
@@ -70,16 +67,16 @@ with gr.Blocks(title="Agentic Chat RAG", fill_width=True, css=css) as demo:
                                            interactive=True,
                                            elem_id="button")
     # Set up event handlers
-    msg.submit(chat.stream_response, [msg, chatbot], [msg, chatbot])
+    # msg.submit(chat.stream_response, [msg, chatbot], [msg, chatbot])
     # clear_chat_mem.click(clear_all_memory, [], [chatbot, msg])
 
     # # File upload handlers
-    upload.click(lambda: chat.reset_chat_engine())
-    clear_db.click(clear_local_docs())
+    # upload.click(lambda: chat.reset_chat_engine())
+    # clear_db.click(clear_local_docs())
 
     # # GitHub repository handlers
-    getRepo.click(chat.set_github_info,
-                  [repoOwnerUsername, repoName, repoBranch])
-    removeRepo.click(chat.reset_github_info,
-                     outputs=[repoOwnerUsername, repoName, repoBranch])
+    # getRepo.click(chat.set_github_info,
+    #               [repoOwnerUsername, repoName, repoBranch])
+    # removeRepo.click(chat.reset_github_info,
+    #                  outputs=[repoOwnerUsername, repoName, repoBranch])
     demo.launch(inbrowser=True) #, share=True

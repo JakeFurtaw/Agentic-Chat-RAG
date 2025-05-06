@@ -4,29 +4,6 @@ to your coding questions. This version works with the latest LLMs, the newest Py
 version of Gradio. This allows the program to work with the new Nvidia Blackwell GPUs.
 
 ## Features
-### Chat Mode
-- **Chat Mode:** Standard mode where the model answers your queries using:
-  - Its built-in knowledge
-  - Your local files (if uploaded)
-  - A GitHub repository (if linked)
-
-- **Key Features:**
-  - **Chat With Files:** Upload documents to provide additional context
-  - **Chat with GitHub Repo:** Use files from a GitHub repository as context
-  - **Advanced File Support:** Parse .pdf, .csv, .xlsx, .docx, and .xml files using Llama Parse
-  - **Interactive Interface:** User-friendly chat experience for all queries
-  - **RAG-powered Responses:** Retrieve and generate answers using your uploaded documents or GitHub repository
-
-
-### Agent Mode
-**Agent Mode:** Agent mode empowers the model to utilize three tools to provide the best possible answer to your query.  
-
-***The model follows a sequential approach:***
-  1. First, it searches your local documents (if provided)
-  2. If insufficient information is found, it checks your GitHub repository (if provided)
-  3. Finally, if needed, it searches the internet to gather relevant information
-
-This multi-tool approach ensures comprehensive responses by leveraging all available resources.
 
 ## Setup and Usage
 1. Clone the repository.
@@ -48,6 +25,6 @@ model_name="..."
 
 5. Run the application:
 ````
-gradio chatrag.py
+gradio acr.py
 ````
 6. The app will automatically open a new tab and launch in your browser.
